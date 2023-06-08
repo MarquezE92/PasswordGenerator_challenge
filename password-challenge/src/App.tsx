@@ -1,10 +1,11 @@
 import { useState, ChangeEvent } from 'react'
-import {BsClipboard, BsClipboardCheck} from "react-icons/bs";
+import {BsClipboard, BsClipboardCheck, BsEyeSlash, BsEye} from "react-icons/bs";
 import './App.css'
 
 interface passwordConfiguration {
   length: number,
-  copied: boolean
+  copied: boolean,
+  show: boolean
 }
 
 interface passwordErrors {
@@ -13,9 +14,10 @@ interface passwordErrors {
 
 
 function App() {
-  const [passwordDetails, setPasswordDetails] = useState<passwordConfiguration>({length: 8, copied: false});
+  const [passwordDetails, setPasswordDetails] = useState<passwordConfiguration>({length: 8, copied: false, show: false});
   const [error, setError] = useState<passwordErrors>({length: ""});
   const [password, setPassword] = useState<string>('');
+ 
 
 
   const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +36,13 @@ function App() {
     }));
   }
 
+  const handleShow = ()=> {
+    setPasswordDetails(prev => ({
+      ...prev,
+      show: !passwordDetails.show
+    }))
+  }
+
   const generatePassword = ()=> {
     const capital = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   const lowercase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
@@ -43,11 +52,30 @@ function App() {
   const characters = [...capital, ...lowercase, ...numbers, ...special];
 
   let newPassword = '';
+  const totalCharacters = passwordDetails?.length;
 
-  for(let i = 1; i <= passwordDetails?.length; i++) {
+  for(let i = 1; i <=  totalCharacters; i++) {
     const character = characters[Math.floor(Math.random() * characters.length)]
     newPassword += character
   }
+  //checking all characters are used
+  if(!special.some(char=> newPassword.includes(char))){
+    newPassword = newPassword.substring(0,(totalCharacters-1)) + special[Math.floor(Math.random() * special.length)]}
+  if(!numbers.some(char=> newPassword.includes(char))){
+    newPassword = newPassword.substring(0,(totalCharacters-2)) + numbers[Math.floor(Math.random() * numbers.length)] + newPassword.substring(totalCharacters-1) }
+  if(!lowercase.some(char=> newPassword.includes(char))){
+    newPassword = newPassword.substring(0,(totalCharacters-3)) + lowercase[Math.floor(Math.random() * lowercase.length)] + newPassword.substring(totalCharacters-2) }
+  if(!capital.some(char=> newPassword.includes(char))){
+    newPassword = newPassword.substring(0,(totalCharacters-4)) + capital[Math.floor(Math.random() * capital.length)] + newPassword.substring(totalCharacters-3) }
+  if(!special.some(char=> newPassword.includes(char))){
+      newPassword = newPassword.substring(0,(totalCharacters-1)) + special[Math.floor(Math.random() * special.length)]}
+  if(!numbers.some(char=> newPassword.includes(char))){
+      newPassword = newPassword.substring(0,(totalCharacters-2)) + numbers[Math.floor(Math.random() * numbers.length)] + newPassword.substring(totalCharacters-1) }
+  if(!lowercase.some(char=> newPassword.includes(char))){
+      newPassword = newPassword.substring(0,(totalCharacters-3)) + lowercase[Math.floor(Math.random() * lowercase.length)] + newPassword.substring(totalCharacters-2) }
+  if(!capital.some(char=> newPassword.includes(char))){
+      newPassword = newPassword.substring(0,(totalCharacters-4)) + capital[Math.floor(Math.random() * capital.length)] + newPassword.substring(totalCharacters-3) }
+  
   setPassword(newPassword)
   setPasswordDetails(prev => ({
     ...prev,
@@ -80,11 +108,16 @@ function App() {
           <div className='CreateBtn' onClick={generatePassword}>Create</div>
           {password ?
           <div className='pass'>
-            <div>{password} </div>
+            <div>{passwordDetails?.show ? password : "✱".repeat(password.length)} </div>
+            {
+              passwordDetails?.show ?
+              <BsEye className="icon" onClick={handleShow}/> :
+              <BsEyeSlash className="icon" onClick={handleShow}/>
+            }
             {
               passwordDetails?.copied ?
-              <BsClipboardCheck className="copyIcon" /> :
-              <BsClipboard onClick={handleCopy} className="copyIcon"/>
+              <BsClipboardCheck className="icon" /> :
+              <BsClipboard onClick={handleCopy} className="icon"/>
             }
             
           </div>

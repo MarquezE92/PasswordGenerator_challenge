@@ -80,9 +80,10 @@ input {
   display: flex;
   gap: 8px;
   align-items: center;
+  font-size: 20px;
  }
 
- .copyIcon {
+ .icon {
   cursor: pointer;
-  font-size: 20px;
+  
  }
