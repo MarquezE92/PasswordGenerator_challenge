@@ -32,10 +32,20 @@ function App() {
   }
 
   const generatePassword = ()=> {
-    const caracteresMayusculas = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-  const caracteresMinusculas = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-  const numeros = '0123456789';
-  const caracteresEspeciales = '!@#$%^&*()';
+    const capital = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+  const lowercase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+  const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  const special = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
+
+  const characters = [...capital, ...lowercase, ...numbers, ...special];
+
+  let newPassword = '';
+
+  for(let i = 1; i <= passwordDetails?.length; i++) {
+    const character = characters[Math.floor(Math.random() * characters.length)]
+    newPassword += character
+  }
+  setPassword(newPassword)
   }
 
   return (
@@ -50,9 +60,12 @@ function App() {
           <input  className={error?.length ? 'error' : 'noError'}  name="length" value={passwordDetails.length} onChange={handleChange}/>
         
         </div>
-        <div>
+        <div className='createPassDiv'>
           <div className='CreateBtn' onClick={generatePassword}>Create</div>
-          <div>{password}</div>
+          {password ?
+            <div>{password}</div> :
+            null
+          }
         </div>
   
       </div>

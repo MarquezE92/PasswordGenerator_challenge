@@ -66,3 +66,12 @@ input {
   transform: translateY(-2px);
   text-shadow: none;
  }
+
+ .createPassDiv {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+ }
