@@ -4,6 +4,7 @@
   --mDark: #526D82;
   --mLight: #526D82;
   --light: #DDE6ED;
+  --error: #CD1818;
 }
 
 .fondo {
@@ -22,7 +23,7 @@
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 input {
@@ -33,6 +34,16 @@ input {
   font-size: 20px;
   font-weight: 600;
   border-radius: 8px;
+}
+
+.errorMsn {
+  font-size: 15px;
+  font-weight: 500;
+  text-shadow: 1px 1px 1px var(--error);
+}
+
+.error {
+  color: var(--error);
 }
 
 .CreateBtn {
