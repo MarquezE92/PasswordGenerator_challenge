@@ -75,3 +75,14 @@ input {
   gap: 16px;
   align-items: center;
  }
+
+ .pass {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+ }
+
+ .copyIcon {
+  cursor: pointer;
+  font-size: 20px;
+ }

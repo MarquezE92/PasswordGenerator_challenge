@@ -1,8 +1,10 @@
 import { useState, ChangeEvent } from 'react'
+import {BsClipboard, BsClipboardCheck} from "react-icons/bs";
 import './App.css'
 
 interface passwordConfiguration {
-  length: number
+  length: number,
+  copied: boolean
 }
 
 interface passwordErrors {
@@ -11,9 +13,10 @@ interface passwordErrors {
 
 
 function App() {
-  const [passwordDetails, setPasswordDetails] = useState<passwordConfiguration>({length: 8})
-  const [error, setError] = useState<passwordErrors>({length: ""})
-  const [password, setPassword] = useState<string>('')
+  const [passwordDetails, setPasswordDetails] = useState<passwordConfiguration>({length: 8, copied: false});
+  const [error, setError] = useState<passwordErrors>({length: ""});
+  const [password, setPassword] = useState<string>('');
+
 
   const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,6 +49,19 @@ function App() {
     newPassword += character
   }
   setPassword(newPassword)
+  setPasswordDetails(prev => ({
+    ...prev,
+    copied: false
+  }));
+  }
+
+  const handleCopy = ()=>{
+    setPasswordDetails(prev => ({
+      ...prev,
+      copied: true
+    }));
+    navigator.clipboard.writeText(password);
+
   }
 
   return (
@@ -63,7 +79,16 @@ function App() {
         <div className='createPassDiv'>
           <div className='CreateBtn' onClick={generatePassword}>Create</div>
           {password ?
-            <div>{password}</div> :
+          <div className='pass'>
+            <div>{password} </div>
+            {
+              passwordDetails?.copied ?
+              <BsClipboardCheck className="copyIcon" /> :
+              <BsClipboard onClick={handleCopy} className="copyIcon"/>
+            }
+            
+          </div>
+            :
             null
           }
         </div>
