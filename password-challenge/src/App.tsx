@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, useRef } from 'react'
 import {BsClipboard, BsClipboardCheck, BsEyeSlash, BsEye} from "react-icons/bs";
 import './App.css'
 
@@ -26,6 +26,10 @@ function App() {
       ...prev,
       [name]: ""
     }))
+    if(isNaN(Number(value))) setError(prev=>({
+      ...prev,
+      [name]: "You must enter a valid number"
+    }))
     if(Number(value) < 4) setError(prev=>({
       ...prev,
       [name]: "Your password must have at least 4 characters"
@@ -43,45 +47,65 @@ function App() {
     }))
   }
 
-  const generatePassword = ()=> {
-    const capital = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-  const lowercase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-  const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  const special = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
+ 
 
-  const characters = [...capital, ...lowercase, ...numbers, ...special];
-
-  let newPassword = '';
-  const totalCharacters = passwordDetails?.length;
-
-  for(let i = 1; i <=  totalCharacters; i++) {
-    const character = characters[Math.floor(Math.random() * characters.length)]
-    newPassword += character
-  }
-  //checking all characters are used
-  if(!special.some(char=> newPassword.includes(char))){
-    newPassword = newPassword.substring(0,(totalCharacters-1)) + special[Math.floor(Math.random() * special.length)]}
-  if(!numbers.some(char=> newPassword.includes(char))){
-    newPassword = newPassword.substring(0,(totalCharacters-2)) + numbers[Math.floor(Math.random() * numbers.length)] + newPassword.substring(totalCharacters-1) }
-  if(!lowercase.some(char=> newPassword.includes(char))){
-    newPassword = newPassword.substring(0,(totalCharacters-3)) + lowercase[Math.floor(Math.random() * lowercase.length)] + newPassword.substring(totalCharacters-2) }
-  if(!capital.some(char=> newPassword.includes(char))){
-    newPassword = newPassword.substring(0,(totalCharacters-4)) + capital[Math.floor(Math.random() * capital.length)] + newPassword.substring(totalCharacters-3) }
-  if(!special.some(char=> newPassword.includes(char))){
-      newPassword = newPassword.substring(0,(totalCharacters-1)) + special[Math.floor(Math.random() * special.length)]}
-  if(!numbers.some(char=> newPassword.includes(char))){
-      newPassword = newPassword.substring(0,(totalCharacters-2)) + numbers[Math.floor(Math.random() * numbers.length)] + newPassword.substring(totalCharacters-1) }
-  if(!lowercase.some(char=> newPassword.includes(char))){
-      newPassword = newPassword.substring(0,(totalCharacters-3)) + lowercase[Math.floor(Math.random() * lowercase.length)] + newPassword.substring(totalCharacters-2) }
-  if(!capital.some(char=> newPassword.includes(char))){
-      newPassword = newPassword.substring(0,(totalCharacters-4)) + capital[Math.floor(Math.random() * capital.length)] + newPassword.substring(totalCharacters-3) }
+  const generatePasswords = ()=> {
+    //I use closures to keep track of passwords and make sure they are unique, while keeping the record secure
+    //The useRef hook is used to store a mutable reference to the allPasswords variable and make sure that the saved values are preserved between renders.
+    const allPasswords = useRef<string[]>([]);
+    
+    const generatePassword = ()=> {
+      const capital = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+      const lowercase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+      const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+      const special = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-", "=", ":"];
+    
+      const characters = [...capital, ...lowercase, ...numbers, ...special];
+    
+      let newPassword = '';
+      const totalCharacters = passwordDetails?.length;
+    
+      for(let i = 1; i <=  totalCharacters; i++) {
+        const character = characters[Math.floor(Math.random() * characters.length)]
+        newPassword += character
+      }
+      //checking all characters are used
+      if(!special.some(char=> newPassword.includes(char))){
+        newPassword = newPassword.substring(0,(totalCharacters-1)) + special[Math.floor(Math.random() * special.length)]}
+      if(!numbers.some(char=> newPassword.includes(char))){
+        newPassword = newPassword.substring(0,(totalCharacters-2)) + numbers[Math.floor(Math.random() * numbers.length)] + newPassword.substring(totalCharacters-1) }
+      if(!lowercase.some(char=> newPassword.includes(char))){
+        newPassword = newPassword.substring(0,(totalCharacters-3)) + lowercase[Math.floor(Math.random() * lowercase.length)] + newPassword.substring(totalCharacters-2) }
+      if(!capital.some(char=> newPassword.includes(char))){
+        newPassword = newPassword.substring(0,(totalCharacters-4)) + capital[Math.floor(Math.random() * capital.length)] + newPassword.substring(totalCharacters-3) }
+      if(!special.some(char=> newPassword.includes(char))){
+          newPassword = newPassword.substring(0,(totalCharacters-1)) + special[Math.floor(Math.random() * special.length)]}
+      if(!numbers.some(char=> newPassword.includes(char))){
+          newPassword = newPassword.substring(0,(totalCharacters-2)) + numbers[Math.floor(Math.random() * numbers.length)] + newPassword.substring(totalCharacters-1) }
+      if(!lowercase.some(char=> newPassword.includes(char))){
+          newPassword = newPassword.substring(0,(totalCharacters-3)) + lowercase[Math.floor(Math.random() * lowercase.length)] + newPassword.substring(totalCharacters-2) }
+      if(!capital.some(char=> newPassword.includes(char))){
+          newPassword = newPassword.substring(0,(totalCharacters-4)) + capital[Math.floor(Math.random() * capital.length)] + newPassword.substring(totalCharacters-3) }
+      
+      if(allPasswords.current.includes(newPassword)) {generatePassword()
+      } else {
+        allPasswords.current.push(newPassword)
+      }
+              
+      setPassword(newPassword)
+      setPasswordDetails(prev => ({
+        ...prev,
+        copied: false
+      }));
+      }
   
-  setPassword(newPassword)
-  setPasswordDetails(prev => ({
-    ...prev,
-    copied: false
-  }));
+      return generatePassword
+
   }
+
+  const handleGeneratePassword = generatePasswords();
+
+
 
   const handleCopy = ()=>{
     setPasswordDetails(prev => ({
@@ -91,6 +115,13 @@ function App() {
     navigator.clipboard.writeText(password);
 
   }
+
+  const validateParameters = ()=> {
+    if(!isNaN(Number(passwordDetails.length)) && passwordDetails.length > 3) return true;
+    return false
+  }
+
+ 
 
   return (
 
@@ -105,7 +136,7 @@ function App() {
         
         </div>
         <div className='createPassDiv'>
-          <div className='CreateBtn' onClick={generatePassword}>Create</div>
+          <div className='CreateBtn' onClick={validateParameters() ? handleGeneratePassword : ()=> {}}>Create</div>
           {password ?
           <div className='pass'>
             <div>{passwordDetails?.show ? password : "✱".repeat(password.length)} </div>
