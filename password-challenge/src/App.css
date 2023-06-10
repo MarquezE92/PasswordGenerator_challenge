@@ -23,7 +23,7 @@
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 24px;
 }
 
 input {
@@ -78,12 +78,29 @@ input {
 
  .pass {
   display: flex;
-  gap: 8px;
+  gap: 24px;
   align-items: center;
   font-size: 20px;
+ }
+
+ .btnsDiv {
+display: flex;
+height: fit-content;
+gap: 8px;
+align-items: center;
  }
 
  .icon {
   cursor: pointer;
   
+ }
+
+  .arrowBtn {
+  font-size: 26px;
+  fill: var(--mLight);
+  cursor: pointer;
+ }
+
+ .arrowBtn:hover {
+fill: var(--light)
  }

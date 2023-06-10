@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useRef } from 'react'
-import {BsClipboard, BsClipboardCheck, BsEyeSlash, BsEye} from "react-icons/bs";
+import {BsClipboard, BsClipboardCheck, BsEyeSlash, BsEye, BsFillArrowDownCircleFill, BsFillArrowUpCircleFill} from "react-icons/bs";
 import './App.css'
 
 interface passwordConfiguration {
@@ -40,6 +40,20 @@ function App() {
     }));
   }
 
+  const handleLengthBtn = (num:number) => {
+    
+    setError(prev=>({
+      ...prev,
+      length: ""
+    }))
+   
+    if(passwordDetails.length <= 4 && Number(num) === -1) return;
+    setPasswordDetails(prev => ({
+      ...prev,
+      length: Number(passwordDetails.length) + Number(num)
+  }))
+}
+  
   const handleShow = ()=> {
     setPasswordDetails(prev => ({
       ...prev,
@@ -132,14 +146,19 @@ function App() {
             <div>How many characters should your password have?</div>
             <div className='errorMsn'>{error?.length}</div>
           </div>
-          <input  className={error?.length ? 'error' : 'noError'}  name="length" value={passwordDetails.length} onChange={handleChange}/>
-        
+          <div className='btnsDiv'>
+            <BsFillArrowUpCircleFill className="arrowBtn" onClick={()=>handleLengthBtn(1)}/>
+            <input  className={error?.length ? 'error' : 'noError'}  name="length" value={passwordDetails.length} onChange={handleChange}/>
+            <BsFillArrowDownCircleFill className="arrowBtn" onClick={()=>handleLengthBtn(-1)}/>
+          </div>
+          
         </div>
         <div className='createPassDiv'>
           <div className='CreateBtn' onClick={validateParameters() ? handleGeneratePassword : ()=> {}}>Create</div>
           {password ?
           <div className='pass'>
             <div>{passwordDetails?.show ? password : "✱".repeat(password.length)} </div>
+            <div className='btnsDiv'>
             {
               passwordDetails?.show ?
               <BsEye className="icon" onClick={handleShow}/> :
@@ -150,7 +169,7 @@ function App() {
               <BsClipboardCheck className="icon" /> :
               <BsClipboard onClick={handleCopy} className="icon"/>
             }
-            
+            </div>
           </div>
             :
             null
