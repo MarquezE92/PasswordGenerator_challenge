@@ -5,16 +5,20 @@ import './App.css'
 interface passwordConfiguration {
   length: number,
   copied: boolean,
-  show: boolean
+  show: boolean,
+  hasCapital: boolean,
+  hasLowercase: boolean,
+  hasNumber: boolean,
+  hasSpecial: boolean
 }
 
 interface passwordErrors {
-  length: string
+  length: string,
 }
 
 
 function App() {
-  const [passwordDetails, setPasswordDetails] = useState<passwordConfiguration>({length: 8, copied: false, show: false});
+  const [passwordDetails, setPasswordDetails] = useState<passwordConfiguration>({length: 8, copied: false, show: false, hasCapital: true, hasLowercase: true, hasNumber:true, hasSpecial:true});
   const [error, setError] = useState<passwordErrors>({length: ""});
   const [password, setPassword] = useState<string>('');
  
@@ -53,6 +57,38 @@ function App() {
       length: Number(passwordDetails.length) + Number(num)
   }))
 }
+
+const handleCapital = ()=> {
+  if(!passwordDetails.hasLowercase && !passwordDetails.hasNumber && !passwordDetails.hasSpecial) return
+  setPasswordDetails(prev => ({
+    ...prev,
+    hasCapital: !passwordDetails.hasCapital
+}))
+}
+
+const handleLowercase = ()=> {
+  if(!passwordDetails.hasCapital && !passwordDetails.hasNumber && !passwordDetails.hasSpecial) return
+  setPasswordDetails(prev => ({
+    ...prev,
+    hasLowercase: !passwordDetails.hasLowercase
+}))
+}
+
+const handleNumbers = ()=> {
+  if(!passwordDetails.hasCapital && !passwordDetails.hasLowercase && !passwordDetails.hasSpecial) return
+  setPasswordDetails(prev => ({
+    ...prev,
+    hasNumber: !passwordDetails.hasNumber
+}))
+}
+
+const handleSpecial = ()=> {
+  if(!passwordDetails.hasCapital && !passwordDetails.hasLowercase && !passwordDetails.hasNumber) return
+  setPasswordDetails(prev => ({
+    ...prev,
+    hasSpecial: !passwordDetails.hasSpecial
+}))
+}
   
   const handleShow = ()=> {
     setPasswordDetails(prev => ({
@@ -69,10 +105,10 @@ function App() {
     const allPasswords = useRef<string[]>([]);
     
     const generatePassword = ()=> {
-      const capital = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-      const lowercase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-      const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-      const special = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-", "=", ":"];
+      const capital = passwordDetails.hasCapital ? ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "Ñ", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"] : [];
+      const lowercase = passwordDetails.hasLowercase ? ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"] : [];
+      const numbers = passwordDetails.hasNumber ? ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] : [];
+      const special = passwordDetails.hasSpecial ? ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-", "=", ":", "/", "<", ">"] : [];
     
       const characters = [...capital, ...lowercase, ...numbers, ...special];
     
@@ -84,21 +120,21 @@ function App() {
         newPassword += character
       }
       //checking all characters are used
-      if(!special.some(char=> newPassword.includes(char))){
+      if(passwordDetails.hasSpecial && !special.some(char=> newPassword.includes(char))){
         newPassword = newPassword.substring(0,(totalCharacters-1)) + special[Math.floor(Math.random() * special.length)]}
-      if(!numbers.some(char=> newPassword.includes(char))){
+      if(passwordDetails.hasNumber && !numbers.some(char=> newPassword.includes(char))){
         newPassword = newPassword.substring(0,(totalCharacters-2)) + numbers[Math.floor(Math.random() * numbers.length)] + newPassword.substring(totalCharacters-1) }
-      if(!lowercase.some(char=> newPassword.includes(char))){
+      if(passwordDetails.hasLowercase && !lowercase.some(char=> newPassword.includes(char))){
         newPassword = newPassword.substring(0,(totalCharacters-3)) + lowercase[Math.floor(Math.random() * lowercase.length)] + newPassword.substring(totalCharacters-2) }
-      if(!capital.some(char=> newPassword.includes(char))){
+      if(passwordDetails.hasCapital && !capital.some(char=> newPassword.includes(char))){
         newPassword = newPassword.substring(0,(totalCharacters-4)) + capital[Math.floor(Math.random() * capital.length)] + newPassword.substring(totalCharacters-3) }
-      if(!special.some(char=> newPassword.includes(char))){
+      if(passwordDetails.hasSpecial && !special.some(char=> newPassword.includes(char))){
           newPassword = newPassword.substring(0,(totalCharacters-1)) + special[Math.floor(Math.random() * special.length)]}
-      if(!numbers.some(char=> newPassword.includes(char))){
+      if(passwordDetails.hasNumber && !numbers.some(char=> newPassword.includes(char))){
           newPassword = newPassword.substring(0,(totalCharacters-2)) + numbers[Math.floor(Math.random() * numbers.length)] + newPassword.substring(totalCharacters-1) }
-      if(!lowercase.some(char=> newPassword.includes(char))){
+      if(passwordDetails.hasLowercase && !lowercase.some(char=> newPassword.includes(char))){
           newPassword = newPassword.substring(0,(totalCharacters-3)) + lowercase[Math.floor(Math.random() * lowercase.length)] + newPassword.substring(totalCharacters-2) }
-      if(!capital.some(char=> newPassword.includes(char))){
+      if(passwordDetails.hasCapital && !capital.some(char=> newPassword.includes(char))){
           newPassword = newPassword.substring(0,(totalCharacters-4)) + capital[Math.floor(Math.random() * capital.length)] + newPassword.substring(totalCharacters-3) }
       
       if(allPasswords.current.includes(newPassword)) {generatePassword()
@@ -118,8 +154,6 @@ function App() {
   }
 
   const handleGeneratePassword = generatePasswords();
-
-
 
   const handleCopy = ()=>{
     setPasswordDetails(prev => ({
@@ -150,6 +184,17 @@ function App() {
             <BsFillArrowUpCircleFill className="arrowBtn" onClick={()=>handleLengthBtn(1)}/>
             <input  className={error?.length ? 'error' : 'noError'}  name="length" value={passwordDetails.length} onChange={handleChange}/>
             <BsFillArrowDownCircleFill className="arrowBtn" onClick={()=>handleLengthBtn(-1)}/>
+          </div>
+          
+        </div>
+        <div  className='optionsCharacters'>
+          <div>Which characters do you want in your password?</div>
+          
+          <div className='options'>
+              <div className={passwordDetails.hasCapital ? 'seleccionado' :'tachado'} onClick={handleCapital}>ABC</div>
+              <div className={passwordDetails.hasLowercase ? 'seleccionado' :'tachado'} onClick={handleLowercase}>abc</div>
+              <div className={passwordDetails.hasNumber ? 'seleccionado' :'tachado'} onClick={handleNumbers}>123</div>
+              <div className={passwordDetails.hasSpecial ? 'seleccionado' :'tachado'} onClick={handleSpecial}>#@!</div>
           </div>
           
         </div>

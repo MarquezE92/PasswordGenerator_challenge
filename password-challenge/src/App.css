@@ -18,10 +18,21 @@
   gap:24px
 }
 
+.title {
+  padding-bottom: 75px;
+}
 
 .options {
   font-weight: 600;
   display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.optionsCharacters {
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 24px;
 }
@@ -67,7 +78,18 @@ input {
   text-shadow: none;
  }
 
+ .tachado {
+  text-decoration: line-through;
+  color: var(--mLight);
+  cursor: pointer;
+ }
+
+ .seleccionado {
+  cursor: pointer;
+ }
+
  .createPassDiv {
+  padding-top: 35px;
   width: fit-content;
   height: fit-content;
   display: flex;
